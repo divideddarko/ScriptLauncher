@@ -183,21 +183,29 @@ function GetPrograms{
 
      Measure-Command {
           try {
-               $ApplicationName = Get-ChildItem -Path "C:\" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
+               $ApplicationName = Get-ChildItem -Path "$ENV:USERPROFILE\Desktop" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
           } catch { 
                Write-Host "error getting data"
           }
      }
 
-     foreach ($script in $ApplicationName.FullName) {
-          Write-Host "Script: $($script)" 
-          Measure-Command {
-               try {
-     
-               } catch {
-                    Write-Host "Unable to retrieve file data"
+     Write-Host "Taken: $(timer)"
+
+     if ($ApplicationName.Count -gt 0) {
+          foreach ($Script in $ApplicationName.FullName) {
+               Measure-Command {
+                    try {
+                         $ScriptName = Get-ItemProperty $Script | Select-Object {$_.Name} -ExpandProperty $_.Name
+                         $ScriptDirectory = Get-ItemProperty $Script | Select-Object {$_.Directory} -ExpandProperty $_.Directory
+                         $ScriptLastWriteTime = Get-ItemProperty $Script | Select-Object {$_.LastWriteTime} -ExpandProperty $_.LastWriteTime
+                         $ScriptOwner = Get-ItemProperty $Script | Select-Object {$_.Owner} -ExpandProperty $_.Owner
+                    } catch {
+                         Write-Host "Unable to retrieve file data"
+                    }
                }
           }
+     } else { 
+          Write-Host "No Files Found"
      }
 
      
