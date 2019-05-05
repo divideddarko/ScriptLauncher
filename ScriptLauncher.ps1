@@ -183,13 +183,26 @@ function GetPrograms{
 
      Measure-Command {
           try {
-               $childcount = Get-ChildItem -Path "C:\" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
+               $ApplicationName = Get-ChildItem -Path "C:\" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
           } catch { 
                Write-Host "error getting data"
           }
      }
 
-     Write-Host $childcount
+     foreach ($script in $ApplicationName.FullName) {
+          Write-Host "Script: $($script)" 
+          Measure-Command {
+               try {
+     
+               } catch {
+                    Write-Host "Unable to retrieve file data"
+               }
+          }
+     }
+
+     
+
+     # Write-Host $($ApplicationName)
 }
 
 
