@@ -216,6 +216,7 @@ function GetPrograms{
           Write-Host "No Files Found"
      }
 
+     Return $FileObject
      Write-Host "Completed"
 
      # Write-Host $($ApplicationName)
@@ -357,22 +358,9 @@ $TitleText.ForeColor     = $WhiteColour
 $TitleText.BackColor     = $GreyColour
 $TitleText.Font          = New-Object System.Drawing.Font("Calibri", 14)
 
-$GetDocDataBtn = New-Object System.Windows.Forms.Button
-$GetDocDataBtn.Text = "Check Data"
-$GetDocDataBtn.Location = '1260, 60'
-$GetDocDataBtn.ForeColor = $BlueBtnColour
-$GetDocDataBtn.BackColor = $GreyColour
-$GetDocDataBtn.Anchor = "Top, Right"
-$GetDocDataBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-$GetDocDataBtn.Cursor = "Hand"
-$GetDocDataBtn.Width = '150'
-$GetDocDataBtn.Anchor = 'Top, Left'
-$GetDocDataBtn.FlatAppearance.BorderSize = 1
-$GetDocDataBtn.Add_Click({Get-SiteData -Data $($DataDropDown.SelectedItem)})
-
 #GetSite Data
 $GetDataBtn                             = New-Object System.Windows.Forms.Button
-$GetDataBtn.Text                        = "Get Site Document Details"
+$GetDataBtn.Text                        = "Search Files"
 $GetDataBtn.Location                    = '180,60'
 $GetDataBtn.ForeColor                   = $BlueBtnColour
 $GetDataBtn.BackColor                   = $GreyColour
@@ -382,65 +370,16 @@ $GetDataBtn.Cursor                      = 'Hand'
 $GetDataBtn.Anchor = 'Top, Left'
 $GetDataBtn.Width                       = '150'
 $GetDataBtn.FlatAppearance.BorderSize   = 1
-$GetDataBtn.Add_Click({Get-SiteDetails})
+$GetDataBtn.Add_Click({GetPrograms -Location $Location.Text})
 
-#input box for site id
-$SiteIDLabel = New-Object System.Windows.Forms.Label
-$SiteIDLabel.Location = '40,35'
-$SiteIDLabel.Text = "Site ID *"
-$SiteIDLabel.ForeColor = $BlueBtnColour
-$SiteIDLabel.BackColor = $GreyColour
-$SiteIDLabel.Font = New-Object System.Drawing.Font("Calibri", 11)
 
-$DocTypeIDLabel = New-Object System.Windows.Forms.Label
-$DocTypeIDLabel.Location = '360,35'
-$DocTypeIDLabel.Text = "Doc Type *"
-$DocTypeIDLabel.ForeColor = $BlueBtnColour
-$DocTypeIDLabel.BackColor = $GreyColour
-$DocTypeIDLabel.Font = New-Object System.Drawing.Font("Calibri", 11)
-
-$AssuredLabel = New-Object System.Windows.Forms.Label
-$AssuredLabel.Location = '520,35'
-$AssuredLabel.Text = "Assured *"
-$AssuredLabel.ForeColor = $BlueBtnColour
-$AssuredLabel.BackColor = $GreyColour
-$AssuredLabel.Font = New-Object System.Drawing.Font("Calibri", 11)
-
-$ElementLabel = New-Object System.Windows.Forms.Label
-$ElementLabel.Location = '680,35'
-$ElementLabel.Text = "Element *"
-$ElementLabel.ForeColor = $BlueBtnColour
-$ElementLabel.BackColor = $GreyColour
-$ElementLabel.Font = New-Object System.Drawing.Font("Calibri", 11)
-
-$AccountTypeLabel = New-Object System.Windows.Forms.Label
-$AccountTypeLabel.Location = '840,35'
-$AccountTypeLabel.Text = "Account Type *"
-$AccountTypeLabel.ForeColor = $BlueBtnColour
-$AccountTypeLabel.BackColor = $GreyColour
-$AccountTypeLabel.Font = New-Object System.Drawing.Font("Calibri", 11)
-
-$SiteInputTxt = New-Object System.Windows.Forms.NumericUpDown
-$SiteInputTxt.Value = ""
+$SiteInputTxt = New-Object System.Windows.Forms.TextBox
+$SiteInputTxt.Text = ""
 $SiteInputTxt.Padding = 4
 $SiteInputTxt.location = '40,55'
 $SiteInputTxt.Size = '125,20'
 $SiteInputTxt.BorderStyle = 0
 $SiteInputTxt.Font = New-Object System.Drawing.Font("Calibri", 18)
-$SiteInputTxt.Controls[0].Visible = 0
-$SiteInputTxt.Maximum = 9999
-$SiteInputTxt.Minimum = 0
-$SiteInputTxt.Add_KeyUp({
-     if ($_.KeyCode -eq "Enter") {
-          if (($($SiteInputTxt.Text.Length) -eq 4) -or (($($SiteInputTxt.Text.Length) -eq 3))) {
-               Write-Host "Found the right length"
-               $DataReturn = Get-SQLData -Query "SELECT * FROM Assets"
-               Write-Host "Results: $($DataReturn.Trigram)"
-          } else {
-               Write-Host "Max search length not found yet"
-          }
-     }
-})
 
 $DataGridView = New-Object System.Windows.Forms.DataGridView
 $DataGridView.Location = '40, 150'
