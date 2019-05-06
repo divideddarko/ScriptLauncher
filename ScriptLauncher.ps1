@@ -177,15 +177,26 @@ function Set-Footer {
      $FooterInfoData.Text = $Message
 }
 
-
+function SetFolderLocation {
+     $SelectFolderDialog = New-Object System.Windows.Forms.FolderBrowserDialog
+     $SelectFolderDialog.ShowDialog() | Out-Null
+     $SelectFolderPath = $SelectFolderDialog.SelectedPath
+     
+     if ($SelectFolderPath -ne "") {
+          $FolderLocation.Text = $SelectFolderPath
+     } else { 
+          Get-Popup -Message "No location selected"
+     }
+}
 
 function GetPrograms{
-
-     
+     Param(
+          [String]$Location
+     )
      $FileProperties = @()
 
      try {
-          $ApplicationName = Get-ChildItem -Path "$ENV:USERPROFILE\Desktop" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
+          $ApplicationName = Get-ChildItem -Path "$($Location)" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
      } catch { 
           Write-Host "error getting data"
      }
@@ -364,18 +375,19 @@ $FolderLocationBtn.FlatAppearance.BorderSize = 0
 $FolderLocationBtn.Cursor = 'Hand'
 $FolderLocationBtn.Anchor = "Top, Left"
 $FolderLocationBtn.BackColor = $GreyColour
-$FolderLocationBtn.Location = '100,60'
-$FolderLocationBtn.Image = [system.convert]::FromBase64String("VBORw0KGgoAAAANSUhEUgAAAgAAAAIACAMAAADDpiTIAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAHovAAB6LwEf/fvJAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAH5QTFRF////VWCEQkpgc4O/UWF7T1l5XpKLXpOMX5aOWGSLZqiZZ6iZVXp9SFFrVHl8cp22Ym+ebbiiRExkTGVwRExkS2FuanitanitcL+ncMCnQ0thR1doQkthb363b363ccKpRE9jQkpgRE5jcoG8ccOpcoK9QkpgQkpgccOpc4O/L1BC1wAAACd0Uk5TABcYGL3AwMDAwcHByMnJyczN2NjZ3Nzd3d3o6Ons7e319vb4+fn+1X4ZBwAABG5JREFUeNrt18dRZQEQBMGPWvSiNSuQA/47iAlEEFwelelC16VXKwAAAAAAAAAAAAAAAAAAYCHWF2Ztg++0moW5//PON1pcAHNotHYAs2u1dgAPl2ZLBzDnT3ZLBzBbdmsH8HpsuHQAvmA9AF+wHoAvWA/AF4wH4AvWA/AF6wH4gvEAfMF6AL5gPQBfsB6ALxgPwBesB+AL1gPwBeMBzP1fG6YD8AXrAfiC9QB8wXgAvmA9AF+wHoAvGA/AF6wH4AvWA/AF6wH4gvEAfMF6AL5gPQBfMB6AL1gPwBesB+AL1gN4uLJnOgBfsB6AL1gPwBeMBzC3vmA7AF+wHoAvWA/AF4wHMOcvVk0H4AvWA/AF4wH4gvUAfMF6AL5gPQBfMB6AL1gPwBesB+ALxgPwBesB+IL1AHzBegC+YDyAOfUF2wHM5hGf+dEBvJ688YkfHcDc/bNwOoD5beF2ALNn4nYAj9c2TgcwZ89GTgcwv4zcDsAXjAfgC9YD8AXrAcy+ndsB+ILxAHzBegC+YD0AXzAegC9YD8AXrAfgC9YD8AXjAfiC9QB8wXoAvmA8AF+wHoAvWA/AF6wH4AvGA/AF6wH4gvUAfMF4AL5gPQBfsB6AL1gPwBeMB+AL1gPwBesB+ILxAHzBegC+YD0AX7AegC8YD8AXrAcw29ZvB+ALxgPwBesB+IL1AHzBegC+YDwAX7AegC9YDyD/BesB5L9gPoA5EEDcvgDaHm8E4AsKwBcUgC8oAF9QAL6gAHxBAdT8vxFA28VOkwDiBCAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABCAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAAIAAEgAASAABAAAkAACAABIAAEgAAQAAJAAAgAASAABIAAEAACQAB8PYB10lYAAAAAAAAAAAAAAAAAAMBCfABSPb0W+w4ukQAAAABJRU5ErkJggg==")
-$FolderLocationBtn.Add_Click({Write-Host "Adding button function here"})
+$FolderLocationBtn.Location = '55,52'
+$FolderLocationBtn.Size = '32,32'
+$FolderLocationBtn.Image = [system.convert]::FromBase64String("iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAejAAAHowEwL7LFAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAD9QTFRF////d4i7QFBgcIC/Tlp2VmKJXpGKarCea7WgUnJ5cpS5aXerRExjccKpRlRncoG8QkphccOpQkpgccOpc4O/HZJUyQAAABJ0Uk5TAA8QEMDAwMbKzdTa2+ns9/j+a68FFAAAAE5JREFUOE/t0zESgCAQBMETFREVZPX/byVEDqo2M2LiTkeEZUrT3ElQWt9OX3AfBOCMBGDxTTWAe3QKhIsA7IkA2K2uAboBBvgbGBKbXzKiRj6rEgeNEQAAAABJRU5ErkJggg==")
+$FolderLocationBtn.Add_Click({SetFolderLocation})
 
 
 $FolderLocation = New-Object System.Windows.Forms.TextBox
 $FolderLocation.Text = ""
 $FolderLocation.Padding = 4
-$FolderLocation.Size = '' + $($GUIWidth - 450) + ',20'
-$FolderLocation.location = '100,55'
+$FolderLocation.Size = '' + $($GUIWidth - 450) + ',17'
+$FolderLocation.location = '110,55'
 $FolderLocation.BorderStyle = 0
-$FolderLocation.Font = New-Object System.Drawing.Font("Calibri", 18)
+$FolderLocation.Font = New-Object System.Drawing.Font("Calibri", 17)
 $FolderLocation.Anchor = "Top, Left"
 $FolderLocation.Enabled = $False
 
