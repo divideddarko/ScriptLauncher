@@ -181,34 +181,42 @@ function Set-Footer {
 
 function GetPrograms{
 
-     Measure-Command {
-          try {
-               $ApplicationName = Get-ChildItem -Path "$ENV:USERPROFILE\Desktop" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
-          } catch { 
-               Write-Host "error getting data"
-          }
+     
+     $FileProperties = @()
+
+     try {
+          $ApplicationName = Get-ChildItem -Path "$ENV:USERPROFILE\Desktop" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object {$_.Extension -match ".ps1"}
+     } catch { 
+          Write-Host "error getting data"
      }
-
-     Write-Host "Taken: $(timer)"
-
+     
      if ($ApplicationName.Count -gt 0) {
           foreach ($Script in $ApplicationName.FullName) {
-               Measure-Command {
-                    try {
-                         $ScriptName = Get-ItemProperty $Script | Select-Object {$_.Name} -ExpandProperty $_.Name
-                         $ScriptDirectory = Get-ItemProperty $Script | Select-Object {$_.Directory} -ExpandProperty $_.Directory
-                         $ScriptLastWriteTime = Get-ItemProperty $Script | Select-Object {$_.LastWriteTime} -ExpandProperty $_.LastWriteTime
-                         $ScriptOwner = Get-ItemProperty $Script | Select-Object {$_.Owner} -ExpandProperty $_.Owner
-                    } catch {
-                         Write-Host "Unable to retrieve file data"
-                    }
+               try {
+                    $ScriptName = Get-ItemProperty $Script | Select-Object Name -ExpandProperty Name
+                    $ScriptDirectory = Get-ItemProperty $Script | Select-Object Directory -ExpandProperty Directory
+                    $ScriptLastWriteTime = Get-ItemProperty $Script | Select-Object LastWriteTime -ExpandProperty LastWriteTime
+                    $ScriptOwner = Get-Acl $Script | Select-Object Owner -ExpandProperty Owner
+               } catch {
+                    Write-Host "Unable to retrieve file data"
+               }
+
+               try {
+                    $FileObject = New-Object PSObject
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name PUID -Value $ScriptName
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name ScriptDirectory -Value $ScriptDirectory
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name ScriptLastWriteTime -Value $ScriptLastWriteTime
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name ScriptOwner -Value $ScriptOwner
+                    $FileProperties += $FileObject
+               } catch {
+                    Write-Host "Unable to build psobject"
                }
           }
      } else { 
           Write-Host "No Files Found"
      }
 
-     
+     Write-Host "Completed"
 
      # Write-Host $($ApplicationName)
 }
