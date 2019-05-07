@@ -224,30 +224,27 @@ function GetPrograms{
                     Write-Host "Unable to build psobject"
                }
           }
-     } else { 
-          Write-Host "No Files Found"
-     }
 
           $ColWidth = 1415 / $FileProperties.Count
           #Apply Data Source
-          $Datagridview.datasource = $FileProperties
+          $Datagridview.DataSource = $FileProperties
           #Resize required to be completed After objects have loaded. 
           $DataGridView.Columns | ForEach-Object {
                $_.Width = $ColWidth
           }
-
+     
           $DataGridView.ColumnHeadersBorderStyle = "none"
-
+     
           $DataGridView.ColumnHeadersDefaultCellStyle | ForEach-Object { 
                $_.BackColor = $MainWindowColour
                $_.ForeColor = $Green
                $_.Alignment = "MiddleCenter"
           }
-
+     
           $DataGridView.RowsDefaultCellStyle | ForEach-Object {
                $_.Backcolor = $MainWindowColour
           }
-
+     
           $DataGridView | ForEach-Object { 
                $_.RowHeadersVisible = $False
                $_.AllowUserToAddRows = $False
@@ -255,8 +252,12 @@ function GetPrograms{
                $_.ReadOnly = $True
                $_.GridColor = $MainWindowColour
                $_.ForeColor = $BlueBtnColour
-               
           }
+     } else { 
+          Write-Host "No Files Found"
+     }
+
+    
 
      Write-Host "Completed"
      Return $FileObject
