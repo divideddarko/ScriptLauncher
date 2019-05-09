@@ -225,9 +225,11 @@ function GetPrograms{
                }
           }
 
-          $ColWidth = 1415 / $FileProperties.Count
+          Write-Host $FileProperties
+
+          $ColWidth = 1415 / 4
           #Apply Data Source
-          $Datagridview.DataSource = $FileProperties
+          $Datagridview.DataSource = [System.Collections.ArrayList]$FileProperties
           #Resize required to be completed After objects have loaded. 
           $DataGridView.Columns | ForEach-Object {
                $_.Width = $ColWidth
