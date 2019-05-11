@@ -184,6 +184,7 @@ function SetFolderLocation {
      
      if ($SelectFolderPath -ne "") {
           $FolderLocation.Text = $SelectFolderPath
+          $FolderLocationBtn.Image = [system.convert]::FromBase64String("iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFMSURBVFhH7dddS8JQGAfwZ+64mThRaGtWF7mL6OVKCMrbLvsCXdZH1E9Qt12Fl3mRCEIGEpTL8mVnbfDYjUyfczYYxX4wPH/B8WfP2XCQNuXy6raK640azRtcJScs4ON6o/36+dy0j/IYE5HDT5JB74F9fb6RC1MIFQgoz093Cq4TITSCpapZnx40mgxjLFIFQs71mWc4popRmugIfvXbHXUxmS0wSpMu4H3Pod96jH0FpEewZF043pZdlj5H7AJxSY8gKVmB1AuQNqFpH8P2ziGmVZx70Ovew2zq4jd0pAJ5rQiFYgXTKp9zmLijoIj4cyn125BUoGRYYFT2MNGM31/A/RhiikbahEpOBcZ0oUPTS/jr9f7GCFSmgV4oY6IJ/jmB73NM0UgFrNoJWLunmGhGr10YDjqYoqU+guxRnBXICoS3Ifnl9B8C+AGth11Yw51mbAAAAABJRU5ErkJggg==");
      } else { 
           Get-Popup -Message "No location selected"
      }
