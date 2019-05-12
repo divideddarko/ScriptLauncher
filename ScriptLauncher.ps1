@@ -195,7 +195,11 @@ function GetApplication {
      )
 
      if (($ScriptDirectory -eq "") -or ($ScriptName -eq "")) { 
-          Get-Popup -Message "Error launching application" -Type Warning
+          Get-Popup -Message "No Application selected to launch" -Type Warning
+     }
+
+     if ($ScriptDirectory -and $ScriptName) { 
+          Write-Host "Dir: $ScriptDirectory + Name: $ScriptName"
      }
 }
 
@@ -225,21 +229,21 @@ function GetPrograms{
 
                try {
                     $FileObject = New-Object PSObject
-                    $FileObject | Add-Member -MemberType "NoteProperty" -Name PUID -Value $ScriptName
-                    $FileObject | Add-Member -MemberType "NoteProperty" -Name ScriptDirectory -Value $ScriptDirectory
-                    $FileObject | Add-Member -MemberType "NoteProperty" -Name ScriptLastWriteTime -Value $ScriptLastWriteTime
-                    $FileObject | Add-Member -MemberType "NoteProperty" -Name ScriptOwner -Value $ScriptOwner
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name Name -Value $ScriptName
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name Directory -Value $ScriptDirectory
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name LastWriteTime -Value $ScriptLastWriteTime
+                    $FileObject | Add-Member -MemberType "NoteProperty" -Name Author -Value $ScriptOwner
                     $FileProperties += $FileObject
                } catch {
                     Write-Log -Message "Unable to build psobject" -Type Warning
                }
           }
 
-          Write-Host $FileProperties
+          $LaunchFile.Enabled = $true
 
           $ColWidth = 1415 / 4
           #Apply Data Source
-          $Datagridview.DataSource = [System.Collections.ArrayList]$FileProperties
+          $GLOBAL:Datagridview.DataSource = [System.Collections.ArrayList]$FileProperties
           #Resize required to be completed After objects have loaded. 
           $DataGridView.Columns | ForEach-Object {
                $_.Width = $ColWidth
@@ -449,10 +453,10 @@ $SearchFilesBtn.Add_Click({
 
 $DataGridView = New-Object System.Windows.Forms.DataGridView
 $DataGridView.Location = '40, 150'
-$DataGridView.Size = '1420,700'
+$DataGridView.Size = '1420,' + $($GUIHeight - 250) + ''
 $DataGridView.Anchor = "Top, Left, Bottom, Right"
 $DataGridView.BorderStyle = 0
-$DataGridView.BackgroundColor = $MainWindowColour
+$DataGridView.BackgroundColor = "green"
 $DataGridView.GridColor = $BlueBtnColour
 
 $LaunchFile = New-Object System.Windows.Forms.Button
@@ -465,8 +469,14 @@ $LaunchFile.Anchor = 'Bottom, Right'
 $LaunchFile.Cursor = 'Hand'
 $LaunchFile.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
 $LaunchFile.FlatAppearance.BorderSize = 1
+$LaunchFile.Enabled = $False
 $LaunchFile.Add_Click({
-     Write-Host "Hello"
+     $AppName = $DataGridview.Rows.Cells[0].Value | Where-Object {$DataGridview.SelectedCells.Selected -eq $True}
+     $AppLoc = $DataGridview.Rows.Cells[1].Value | Where-Object {$DataGridView.SelectedCells.Selected -eq $True}
+
+     GetApplication -ScriptDirectory $DataGridView.SelectedRows[0] -ScriptName $DataGridView.SelectedRows[2]
+     
+     Write-Host "SelectRow $($AppLoc) $($AppName)"
 })
 
 
